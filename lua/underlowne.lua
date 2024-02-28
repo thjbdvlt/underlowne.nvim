@@ -1,27 +1,3 @@
--- underlowne
---
--- underlining for markdown
--- rotates over styles to underline the current line
--- typically, it would be:
---
--- this
--- ----
---
--- and this
--- ========
---
--- but as in parameter chars, any single character may be put,
--- it could also rotate (for example) in:
---
--- this
--- ////
---
--- and this
--- ........
---
--- and also this
--- ?????????????
-
 -- note on string length:
 -- in most casse, i use `vim.fn.strdisplaywidth(s)` and not lua 
 -- standard `string.len(s)` because it count byte and not visual char
@@ -90,7 +66,7 @@ local function underline(line_nr, char)
     vim.api.nvim_buf_set_text(
         buffer, row, len, row, len, {"", underline_text}
     )
-    return row
+    return nil
 end
 
 local function tablelen(t)
@@ -118,33 +94,43 @@ local function cyclingnextchar(chars, n)
 end
 
 
-function Underlowne(chars, c)
-    local line, line_nr, char_n, nextchar, text_line
-    local _underlined = nil
+function Underlowne(chars, add_recognized_chars)
+    local line, line_nr, char_n, nextchar
     local cur_line_nr = vim.api.nvim_win_get_cursor(0)[1]
+    local l, c = nil, nil
+
+    local recognized_chars = {}
+    for _, t in pairs({chars, add_recognized_chars}) do
+        for _, i in pairs(t) do
+            table.insert(recognized_chars, i)
+        end
+    end
+
+    -- {0, 1} so it may be used when the cursor is on text line, and when cursor is on underlining line.
     for _, i in pairs({0, 1}) do
         line_nr = cur_line_nr + i
-        text_line = line_nr - 1
         line = vim.fn.getline(line_nr)
-        char_n = starts_with_which(line, chars)
+        char_n = starts_with_which(line, recognized_chars)
         if char_n ~= nil and islineonechar(line) then
             nextchar = cyclingnextchar(chars, char_n)
             vim.cmd(tostring(line_nr))
             vim.api.nvim_del_current_line()
-            _underlined = underline(text_line, nextchar, c)
-            -- TODO: il faudrait call underline plus tard, le plus tard possible. comme ça je fais que une seule fois le test des chars...
+            l = line_nr - 1
+            c = nextchar
             break
         end
     end
 
     -- if still no underlining, then add a new one without deleting anything.
-    if _underlined == nil and isemptyline(cur_line_nr) == false then
+    if l == nil and isemptyline(cur_line_nr) == false then
         line_nr = cur_line_nr + 1
-        _underlined = underline(cur_line_nr, chars[1], c)
+        l = cur_line_nr
+        c = chars[1]
     end
+    underline(l, c)
 
     -- add empty line after underline (if no empty line)
-    if isemptyline(line_nr+1) == false  and _underlined ~= nil then
+    if isemptyline(line_nr+1) == false  and l ~= nil then
         vim.api.nvim_buf_set_text(0, line_nr, 0, line_nr, 0, {"", ""})
     end
 
