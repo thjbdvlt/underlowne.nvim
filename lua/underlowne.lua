@@ -19,6 +19,20 @@ local function isemptyline(line_nr)
     return string.len(nospace) == 0
 end
 
+local function iseof(line_nr)
+    -- returns true if line_nr is last line
+    --
+    return line_nr >= vim.api.nvim_buf_line_count(0)
+end
+
+local function eof_addline(line_nr)
+    local current_line = vim.api.nvim_win_get_cursor(0)[1]
+    vim.cmd(tostring(line_nr))
+    vim.cmd('copy ' .. tostring(line_nr))
+    vim.cmd('s/.*//g')
+end
+
+
 local function underline(line_nr, char)
     -- underline a line like this
     -- ==========================
@@ -33,24 +47,17 @@ local function underline(line_nr, char)
     local buffer = 0
     -- under current line
     -- local start_row = line_nr + 1
-    local start_row = line_nr
+    local row = line_nr - 1
     -- at the beginning of the line
-    local start_col = 0
-    -- no line is replaced
-    local end_row = line_nr
-    local end_col = 0
+    -- no line is replaced. but to avoid error if EOF, i put a newline after the current line.
     -- the underline is the char multiplied by the length of line
     local underline_text = string.rep(char, len)
     -- do underline
     vim.api.nvim_buf_set_text(
-        buffer,
-        start_row,
-        start_col,
-        end_row,
-        end_col,
-        {underline_text, ""}
+        buffer, row, len, row, len,
+        {"", underline_text}
     )
-    return start_col
+    return row
 end
 
 local function tablelen(t)
@@ -115,13 +122,10 @@ function Underlowne(chars)
     -- and also this
     -- ?????????????
     -- 
-    local line
-    local line_nr
-    local char_n
-    local nextchar
-    local text_line
-    local _underlined
+    local line, line_nr, char_n, nextchar, text_line
+    local _underlined = nil
     local cur_line_nr = vim.api.nvim_win_get_cursor(0)[1]
+    --
     for _, i in pairs({0, 1}) do
         line_nr = cur_line_nr + i
         text_line = line_nr - 1
@@ -136,15 +140,15 @@ function Underlowne(chars)
         end
     end
     -- if still no underlining, then add a new one without deleting anything.
-    if _underlined == nil then
+    if _underlined == nil and isemptyline(cur_line_nr) == false then
         line_nr = cur_line_nr + 1
         _underlined = underline(cur_line_nr, chars[1])
     end
     -- add empty line after underline (if no empty line)
-    if isemptyline(line_nr+1) == false then
+    if isemptyline(line_nr+1) == false  and _underlined ~= nil then
+        print(vim.inspect(chars))
         vim.api.nvim_buf_set_text(0, line_nr, 0, line_nr, 0, {"", ""})
     end
-
     -- go back to cursor position
     vim.cmd(tostring(cur_line_nr))
 end
