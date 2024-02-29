@@ -1,19 +1,16 @@
-undarlowne
-==========
-
-minimal neovim plugin for markdown underlined titles markdown, i.e:
+undarlowne.nvim
+minimal neovim plugin for markdown underlined titles, i.e:
 
 ```markdown
 pretty subtitle
 ---------------
-
 
 prettier title
 ==============
 
 ```
 
-it adds an underline if there is none, and rotates through styles if there is one.
+it adds an underline if there is none (non-title becomes title), and if there is one, it switches to the other one (change title style). (more exactly: it cycles to registered styles, and select the next one; but if there is only two styles, e.g. `---` and `===`, then "cycling through" and "switching" is pretty much the same).
 
 example
 -------
@@ -57,7 +54,7 @@ vim.api.nvim_set_keymap(
 )
 ```
 
-any single character may be used as underlining chars, so it could also rotate (for example) through:
+any single character may be used as underlining chars, so it could also cycle (for example) through:
 
 ```
 this     and this     and that
@@ -83,7 +80,7 @@ if there are margins (trailing spaces), they are preserved, like in:
 and then a paragraph about singing birds.
 ```
 
-there are actually two arrays of chars. the first one is the chars that must be _used_ as underlining chars, and the second is the chars that must be _recognized_ as underlining chars. so one can map something like:
+there are actually two arrays of chars. the first one is the chars that must be _used_ as underlining chars, and the second one (which is optional) is the chars that must only be _recognized_ as underlining chars. so one can map something like:
 
 ```lua
 vim.api.nvim_set_keymap(

@@ -1,9 +1,5 @@
--- note on string length:
--- in most casse, i use `vim.fn.strdisplaywidth(s)` and not lua 
--- standard `string.len(s)` because it count byte and not visual char
--- (and i want visual char count: i.e. à has length 1, not 2).
--- but in one case (for vim.api.nvim_buf_set_text(), i use 
--- string.len(), because the byte length is required.
+-- underlined mardown titles
+-- Copyright (C) 2024 thjbdvlt
 
 local function islineonechar(line)
     -- check if a line is make of one char (repeated or not)
