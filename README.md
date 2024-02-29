@@ -1,14 +1,9 @@
-undarlowne.nvim
-minimal neovim plugin for markdown underlined titles, i.e:
+underlowne.nvim
+===============
 
-```markdown
-pretty subtitle
----------------
+minimal neovim plugin for markdown underlined titles.
 
-prettier title
-==============
-
-```
+![](./img/example.gif)
 
 it adds an underline if there is none (non-title becomes title), and if there is one, it switches to the other one (change title style). (more exactly: it cycles to registered styles, and select the next one; but if there is only two styles, e.g. `---` and `===`, then "cycling through" and "switching" is pretty much the same).
 
