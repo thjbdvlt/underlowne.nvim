@@ -1,11 +1,11 @@
 underlowne.nvim
 ===============
 
-minimal neovim plugin for markdown underlined titles.
+minimal [neovim](https://github.com/neovim/neovim) plugin for markdown underlined titles.
 
 ![](./img/example.gif)
 
-it adds an underline if there is none (non-title becomes title), and if there is one, it switches to the other one (change title style). (more exactly: it cycles to registered styles, and select the next one; but if there is only two styles, e.g. `---` and `===`, then "cycling through" and "switching" is pretty much the same).
+adds an underline (same length as current line) if there is none (non-title becomes title), and if there is already one, it switches to another one (changes title style). (more exactly: it cycles to registered styles, and select the next one; but if there is only two styles, typically `---` and `===`, then "cycling through" and "switching" is pretty much the same.)
 
 example
 -------
@@ -37,10 +37,13 @@ usage and configuration
 -----------------------
 
 just require the plugin and map the function to anything (key, command).
-i personally use `==` because in my practice of markdown writing, it is useless.
+i personally use `==` because in my practice of markdown writing, its default function is absolutely useless.
 
 ```lua
+-- e.g. in ~/.config/nvim/after/ftplugin/markdown.lua
+
 require('underlowne')
+
 vim.api.nvim_set_keymap(
     "n",
     "==",
