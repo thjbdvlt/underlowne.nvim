@@ -5,7 +5,7 @@ minimal [neovim](https://github.com/neovim/neovim) plugin for markdown underline
 
 ![](./img/example.gif)
 
-adds an underline (same length as current line) if there is none (non-title becomes title), and if there is already one, it switches to another one (changes title style). (more exactly: it cycles to registered styles, and select the next one; but if there is only two styles, typically `---` and `===`, then "cycling through" and "switching" is pretty much the same.)
+adds an __underline__ (same length as current line) if there is none (non-title becomes title), and if there is already one, it switches to another one (changes title style). (more exactly: it cycles to registered styles, and select the next one; but if there is only two styles, typically `---` and `===`, then "cycling through" and "switching" is pretty much the same.)
 
 example
 -------
@@ -18,7 +18,7 @@ this magic place is cool.
 will become:
 
 ```markdown
-magic place
+magic place<cursor>
 -----------
 
 this magic place is cool.
@@ -27,7 +27,7 @@ this magic place is cool.
 which would become (if the function is used once again):
 
 ```markdown
-magic place
+magic place<cursor>
 ===========
 
 this magic place is cool.
