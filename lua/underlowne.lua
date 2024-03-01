@@ -1,7 +1,4 @@
 -- underlined mardown titles
---
--- License MIT
--- Copyright (C) 2024 thjbdvlt
 
 local function islineonechar(line)
     -- check if a line is made of one char (repeated or not)
